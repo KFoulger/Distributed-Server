@@ -97,14 +97,23 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Authorisation\APIAuthorisationHandler.cs" />
     <Compile Include="Controllers\Authorisation\CustomAuthoriseAttribute.cs" />
+    <Compile Include="Controllers\ProtectedController.cs" />
     <Compile Include="Controllers\TalkBackController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201903221849092_migraton1.cs" />
-    <Compile Include="Migrations\201903221849092_migraton1.Designer.cs">
-      <DependentUpon>201903221849092_migraton1.cs</DependentUpon>
+    <Compile Include="Migrations\201904091345490_mig1.cs" />
+    <Compile Include="Migrations\201904091345490_mig1.Designer.cs">
+      <DependentUpon>201904091345490_mig1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904131805092_mig2.cs" />
+    <Compile Include="Migrations\201904131805092_mig2.Designer.cs">
+      <DependentUpon>201904131805092_mig2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904141432287_mig3.cs" />
+    <Compile Include="Migrations\201904141432287_mig3.Designer.cs">
+      <DependentUpon>201904141432287_mig3.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\User.cs" />
@@ -124,8 +133,14 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201903221849092_migraton1.resx">
-      <DependentUpon>201903221849092_migraton1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201904091345490_mig1.resx">
+      <DependentUpon>201904091345490_mig1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904131805092_mig2.resx">
+      <DependentUpon>201904131805092_mig2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904141432287_mig3.resx">
+      <DependentUpon>201904141432287_mig3.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -12,7 +12,7 @@ namespace SecuroteckWebApplication.Controllers
     {
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
-            if(!Thread.CurrentPrincipal.Identity.IsAuthenticated) // If the principle.identity on the current thread is not authenticated
+            if (!Thread.CurrentPrincipal.Identity.IsAuthenticated) // If the principle.identity on the current thread is not authenticated
             {
                 // Respond with an 'Unauthorised' status code and error
                 actionContext.Response = actionContext.ControllerContext.Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Unauthorized. Check ApiKey in Header is correct.");
@@ -22,6 +22,17 @@ namespace SecuroteckWebApplication.Controllers
     }
 
     #region Task7
-    // TODO: Add Admin role authorisation attribute
-    #endregion
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    public class AdminRoleAttribute : ActionFilterAttribute
+    {
+        public override void OnActionExecuting(HttpActionContext actionContext)
+        {
+            if (!Thread.CurrentPrincipal.IsInRole("Admin"))
+            {
+                actionContext.Response = actionContext.ControllerContext.Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Unauthorized. Admin access only.");
+            }
+        }
+
+        #endregion
+    }
 }

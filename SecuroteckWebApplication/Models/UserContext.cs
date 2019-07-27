@@ -14,8 +14,10 @@ namespace SecuroteckWebApplication.Models
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Log> Logs { get; set; }
+        public DbSet<ArchivedLog> ArchivedLogs { get; set; }
         
-        //TODO: Task13
+        
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

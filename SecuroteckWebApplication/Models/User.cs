@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Xml;
 
 namespace SecuroteckWebApplication.Models
@@ -16,11 +17,28 @@ namespace SecuroteckWebApplication.Models
         public string ApiKey { get; set; }
         public string UserName { get; set; }
         public string Role { get; set; }
-        public User(){ }
+        public virtual ICollection<Log> Logs { get; set; }
+        public User() { }
     }
 
     #region Task13?
-    // TODO: You may find it useful to add code here for Logging
+    public class Log
+    {
+        [Key]
+        public string LogKey { get; set; }
+        public string LogString { get; set; }
+        public string LogDateTime { get; set; }
+        public Log() { }
+    }
+    public class ArchivedLog
+    {
+        [Key]
+        public string LogKey { get; set; }
+        public string LogString { get; set; }
+        public string UserKey { get; set; }
+        public string DateTime { get; set; }
+        public ArchivedLog() { }
+    }
     #endregion
 
     public class UserDatabaseAccess
@@ -37,14 +55,15 @@ namespace SecuroteckWebApplication.Models
             string role = "User";
             using (var ctx = new UserContext())
             {
-                if(ctx.Users.DefaultIfEmpty() == null)
+
+                if (ctx.Users.FirstOrDefault() == null)
                 {
                     role = "Admin";
                 }
                 User user = new User()
                 {
                     ApiKey = id.ToString(),
-                    UserName = username, 
+                    UserName = username,
                     Role = role
                 };
                 ctx.Users.Add(user);
@@ -52,6 +71,24 @@ namespace SecuroteckWebApplication.Models
                 ctx.Dispose();
             }
             return id.ToString();
+        }
+
+        public void CreateLog(string APIKey, string action)
+        {
+            using(var ctx = new UserContext())
+            {
+                Guid id = Guid.NewGuid();
+                Log log = new Log()
+                {
+                    LogKey = id.ToString(),
+                    LogString = "User requested " + action,
+                    LogDateTime = DateTime.Now.ToString()
+                };
+                User u = ctx.Users.FirstOrDefault(U => U.ApiKey == APIKey);
+                u.Logs.Add(log);
+                ctx.Logs.Add(log);
+                ctx.SaveChanges();
+            }
         }
         /// <summary>
         /// Finds a user based on their APIKey
@@ -98,7 +135,7 @@ namespace SecuroteckWebApplication.Models
             using (var ctx = new UserContext())
             {
                 User user = ctx.Users.FirstOrDefault(U => U.ApiKey == key);
-                if(user != null)
+                if (user != null && user.UserName == username)
                 {
                     found = true;
                 }
@@ -126,7 +163,7 @@ namespace SecuroteckWebApplication.Models
                     ctx.Dispose();
                     return null;
                 }
-                
+
             }
         }
         /// <summary>
@@ -165,12 +202,45 @@ namespace SecuroteckWebApplication.Models
                 if (user != null)
                 {
                     response = "User " + user.UserName + " has been deleted";
+                    foreach(Log log in user.Logs)
+                    {
+                        ArchivedLog aLog = new ArchivedLog()
+                        {
+                            LogKey = log.LogKey,
+                            LogString = log.LogString,
+                            UserKey = user.ApiKey,
+                            DateTime = log.LogDateTime
+                        };
+                        ctx.ArchivedLogs.Add(aLog);
+                    }
+                    ctx.Logs.RemoveRange(user.Logs);
                     ctx.Users.Remove(user);
                     ctx.SaveChanges();
                 }
                 ctx.Dispose();
             }
             return response;
+        }
+
+        public bool ChangeRole(string username, string role)
+        {
+            using (var ctx = new UserContext())
+            {
+                User user = ctx.Users.FirstOrDefault(User => User.UserName == username);
+                if (user != null)
+                {
+
+                    user.Role = role;
+                    ctx.SaveChanges();
+                    return true;
+
+
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
 
     }

@@ -12,8 +12,6 @@ namespace SecuroteckWebApplication.Controllers
         [ActionName("Hello")]
         public HttpResponseMessage Get()
         {
-            //TASK1
-            // TODO: add api/talkback/hello response
             return Request.CreateResponse(HttpStatusCode.OK, "Hello World");
         }
 
